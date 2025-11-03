@@ -1,0 +1,17 @@
+# 忽略 Python 虚拟环境
+.venv/
+venv/
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+*.swp
+*.DS_Store
+
+# 忽略 Git 文件
+.git/
+.gitignore
+
+# 忽略 Docker 文件
+Dockerfile
+docker-compose.yml
