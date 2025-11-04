@@ -1,4 +1,4 @@
-# Stage 1: Build dependencies
+# Dockerfile
 FROM python:3.12-slim AS builder
 
 ENV PYTHONDONTWRITEBYTECODE=1 \
