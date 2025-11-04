@@ -13,6 +13,8 @@ import os
 from datetime import timedelta
 from pathlib import Path
 
+from dotenv import load_dotenv
+
 import users
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -82,6 +84,8 @@ WSGI_APPLICATION = 'auth_service.wsgi.application'
 
 # Database
 # https://docs.djangoproject.com/en/5.2/ref/settings/#databases
+
+load_dotenv(BASE_DIR.parent / ".env")  # 根据你的路径调整
 
 DATABASES = {
     'default': {
