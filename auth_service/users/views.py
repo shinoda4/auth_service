@@ -2,9 +2,10 @@ from rest_framework import viewsets, permissions, status
 from rest_framework.decorators import action, api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
+from rest_framework_simplejwt.views import TokenObtainPairView
 
 from .models import User, Role, Permission
-from .serializers import UserSerializer, RoleSerializer, PermissionSerializer
+from .serializers import UserSerializer, RoleSerializer, PermissionSerializer, JWTCBATokenObtainPairSerializer
 
 
 class UserViewSet(viewsets.ModelViewSet):
@@ -36,6 +37,10 @@ class PermissionViewSet(viewsets.ModelViewSet):
     queryset = Permission.objects.all()
     serializer_class = PermissionSerializer
     permission_classes = [permissions.IsAuthenticated, ]
+
+
+class JWTCBATokenObtainPairView(TokenObtainPairView):
+    serializer_class = JWTCBATokenObtainPairSerializer
 
 
 @api_view(["POST"])
