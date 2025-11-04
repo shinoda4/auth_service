@@ -2,9 +2,11 @@
 from xmlrpc.client import Fault
 
 from rest_framework import viewsets, permissions, status
-from rest_framework.decorators import action
+from rest_framework.decorators import action, api_view, permission_classes
+from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from .models import User, Role, Permission, UserRole, RolePermission
+from .permissions import HasPermission
 from .serializers import UserSerializer, RoleSerializer, PermissionSerializer, UserRoleSerializer, \
     RolePermissionSerializer
 
@@ -12,11 +14,12 @@ from .serializers import UserSerializer, RoleSerializer, PermissionSerializer, U
 class UserViewSet(viewsets.ModelViewSet):
     queryset = User.objects.all()
     serializer_class = UserSerializer
-    permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [permissions.IsAuthenticated, HasPermission]
+    required_permission = "user_manage"
 
-    @action(detail=True, methods=['get'])
-    def roles_permissions(self, request, pk=None):
-        user = self.get_object()
+    @action(detail=False, methods=['get'])
+    def roles_permissions(self, request):
+        user = request.user
         roles = [ur.role.name for ur in user.roles.all()]
         permissions = []
         for ur in user.roles.all():
@@ -29,19 +32,18 @@ class UserViewSet(viewsets.ModelViewSet):
             'permissions': list(set(permissions))
         })
 
-
-# Role CRUD
 class RoleViewSet(viewsets.ModelViewSet):
     queryset = Role.objects.all()
     serializer_class = RoleSerializer
-    permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [permissions.IsAuthenticated, HasPermission]
+    required_permission = "role_manage"
 
 
-# Permission CRUD
 class PermissionViewSet(viewsets.ModelViewSet):
     queryset = Permission.objects.all()
     serializer_class = PermissionSerializer
-    permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [permissions.IsAuthenticated, HasPermission]
+    required_permission = "permission_manage"
 
 
 class UserRoleViewSet(viewsets.ModelViewSet):
@@ -76,3 +78,21 @@ class RolePermissionViewSet(viewsets.ModelViewSet):
             return Response({'status': 'deleted'}, status=status.HTTP_200_OK)
         except RolePermission.DoesNotExist:
             return Response({'error': 'Not found'}, status=status.HTTP_404_NOT_FOUND)
+
+
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+def verify_permission(request):
+    user_id = request.user.id
+    perm_code = request.data.get('permission')
+    try:
+        user = User.objects.get(id=user_id)
+    except User.DoesNotExist:
+        return Response({'detail': 'User not found'}, status=404)
+
+    user_permissions = set(
+        RolePermission.objects.filter(role__userrole__user=user)
+        .values_list('permission__code', flat=True)
+    )
+
+    return Response({'has_permission': perm_code in user_permissions})

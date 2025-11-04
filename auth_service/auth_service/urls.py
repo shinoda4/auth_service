@@ -19,7 +19,8 @@ from django.urls import path, include
 from rest_framework.routers import DefaultRouter
 from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView, TokenVerifyView, TokenBlacklistView
 
-from users.views import UserViewSet, RoleViewSet, PermissionViewSet, UserRoleViewSet, RolePermissionViewSet
+from users.views import UserViewSet, RoleViewSet, PermissionViewSet, UserRoleViewSet, RolePermissionViewSet, \
+    verify_permission
 
 router = DefaultRouter()
 router.register(r'users', UserViewSet)
@@ -37,4 +38,5 @@ urlpatterns = [
     path('api/auth/token/verify/', TokenVerifyView.as_view(), name='token_verify'),
     path('api/auth/token/blacklist/', TokenBlacklistView.as_view(), name='token_blacklist'),
     path('api/auth/', include('djoser.urls')),
+    path('api/auth/verify_permission/', verify_permission, name='verify_permission'),
 ]
