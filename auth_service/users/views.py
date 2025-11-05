@@ -46,12 +46,14 @@ class JWTCBATokenObtainPairView(TokenObtainPairView):
 @api_view(["POST"])
 @permission_classes([IsAuthenticated])
 def check_permission(request):
+    user = request.user
+
     permission_code = request.data.get("permission_code")
 
-    if not permission_code:
+    if not permission_code and not user.is_superuser:
         return Response({"detail": "permission_code is required"}, status=status.HTTP_400_BAD_REQUEST)
-
-    user = request.user
+    elif not permission_code and user.is_superuser:
+        return Response({"detail": {"is_superuser": True}}, status=status.HTTP_200_OK)
 
     has_permission = user.roles.filter(permissions__permission_code=permission_code).exists()
 
