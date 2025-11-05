@@ -1,6 +1,6 @@
 from rest_framework import serializers
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
-from djoser.serializers import UserCreateSerializer as BaseUserCreateSerializer
+from djoser.serializers import UserCreatePasswordRetypeSerializer as BaseUserCreatePasswordRetypeSerializer
 
 from .models import User, Permission, Role
 
@@ -56,19 +56,11 @@ class JWTCBATokenObtainPairSerializer(TokenObtainPairSerializer):
         return token
 
 
-class UserCreateSerializer(BaseUserCreateSerializer):
+class UserCreateSerializer(BaseUserCreatePasswordRetypeSerializer):
     phone_number = serializers.CharField(required=True, allow_blank=False)
     email = serializers.EmailField(required=True, allow_blank=False)
     re_password = serializers.CharField(style={'input_type': 'password'}, write_only=True)
 
-    class Meta(BaseUserCreateSerializer.Meta):
+    class Meta(BaseUserCreatePasswordRetypeSerializer.Meta):
         model = User
         fields = ('id', 'username', 'email', 'phone_number', 'password', 're_password')
-
-    def validate(self, attrs):
-        print(attrs)
-        if not attrs.get("phone_number"):
-            raise serializers.ValidationError({"phone_number": "This field is required."})
-        if not attrs.get("email"):
-            raise serializers.ValidationError({"email": "This field is required."})
-        return attrs
