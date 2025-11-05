@@ -53,6 +53,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'corsheaders',
     'rest_framework',
+    'rest_framework.authtoken',
     'rest_framework_simplejwt',
     'rest_framework_simplejwt.token_blacklist',
     'djoser',
@@ -140,6 +141,8 @@ USE_TZ = True
 STATIC_URL = 'static/'
 STATIC_ROOT = os.path.join(BASE_DIR, "staticfiles")  # 用于 collectstatic
 
+EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
+
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
 
@@ -158,5 +161,10 @@ SIMPLE_JWT = {
 }
 
 DJOSER = {
-    'USER_CREATE_PASSWORD_RETYPE': True
+    'USER_CREATE_PASSWORD_RETYPE': True,
+    "ACTIVATION_URL": "auth/activate/{uid}/{token}",
+    "SEND_ACTIVATION_EMAIL": True,
+    "SERIALIZERS": {
+        "user_create_password_retype": "users.serializers.UserCreateSerializer"
+    },
 }
