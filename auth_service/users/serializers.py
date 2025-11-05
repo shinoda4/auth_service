@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
+from rest_framework.validators import UniqueValidator
 from djoser.serializers import UserCreatePasswordRetypeSerializer as BaseUserCreatePasswordRetypeSerializer
 
 from .models import User, Permission, Role
@@ -35,30 +35,15 @@ class UserSerializer(serializers.ModelSerializer):
         exclude = ["password", "groups", "user_permissions"]
 
 
-class JWTCBATokenObtainPairSerializer(TokenObtainPairSerializer):
-    """
-    JWT Claim-Based Authorization Token Serializer
-    """
-
-    @classmethod
-    def get_token(cls, user: User):
-        token = super().get_token(user)
-
-        roles = list(user.roles.values_list("role_name", flat=True))
-        permissions = list(
-            user.roles.values_list("permissions__permission_code", flat=True)
-        )
-
-        token["roles"] = roles
-        token["permissions"] = permissions
-        token["username"] = user.username
-
-        return token
-
-
 class UserCreateSerializer(BaseUserCreatePasswordRetypeSerializer):
-    phone_number = serializers.CharField(required=True, allow_blank=False)
-    email = serializers.EmailField(required=True, allow_blank=False)
+    email = serializers.EmailField(
+        required=True,
+        validators=[UniqueValidator(queryset=User.objects.all())]
+    )
+    phone_number = serializers.CharField(
+        required=True,
+        validators=[UniqueValidator(queryset=User.objects.all())]
+    )
     re_password = serializers.CharField(style={'input_type': 'password'}, write_only=True)
 
     class Meta(BaseUserCreatePasswordRetypeSerializer.Meta):

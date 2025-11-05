@@ -53,7 +53,6 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'corsheaders',
     'rest_framework',
-    'rest_framework.authtoken',
     'rest_framework_simplejwt',
     'rest_framework_simplejwt.token_blacklist',
     'djoser',
@@ -156,6 +155,7 @@ REST_FRAMEWORK = {
 AUTH_USER_MODEL = 'users.User'
 
 SIMPLE_JWT = {
+    'AUTH_HEADER_TYPES': ('JWT',),
     "ACCESS_TOKEN_LIFETIME": timedelta(minutes=50),
     "REFRESH_TOKEN_LIFETIME": timedelta(days=1),
 }
@@ -167,4 +167,5 @@ DJOSER = {
     "SERIALIZERS": {
         "user_create_password_retype": "users.serializers.UserCreateSerializer"
     },
+    'TOKEN_MODEL': None,
 }
