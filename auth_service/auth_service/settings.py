@@ -155,7 +155,7 @@ REST_FRAMEWORK = {
 AUTH_USER_MODEL = 'users.User'
 
 SIMPLE_JWT = {
-    'AUTH_HEADER_TYPES': ('JWT',),
+    'AUTH_HEADER_TYPES': ('Bearer',),
     "ACCESS_TOKEN_LIFETIME": timedelta(minutes=50),
     "REFRESH_TOKEN_LIFETIME": timedelta(days=1),
 }
@@ -168,4 +168,5 @@ DJOSER = {
         "user_create_password_retype": "users.serializers.UserCreateSerializer"
     },
     'TOKEN_MODEL': None,
+    "USERNAME_RESET_CONFIRM_URL": "auth/username-reset/{uid}/{token}"
 }
