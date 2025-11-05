@@ -12,19 +12,6 @@ class UserViewSet(viewsets.ModelViewSet):
     serializer_class = UserSerializer
     permission_classes = [permissions.IsAuthenticated, ]
 
-    @action(detail=False, methods=['get'])
-    def me(self, request):
-        serializer = UserSerializer(request.user)
-        return Response(serializer.data)
-
-    @action(detail=False, methods=['patch'])
-    def update_me(self, request):
-        serializer = UserSerializer(request.user, data=request.data, partial=True)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
 
 class RoleViewSet(viewsets.ModelViewSet):
     queryset = Role.objects.all()
