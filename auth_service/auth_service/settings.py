@@ -168,5 +168,6 @@ DJOSER = {
         "user_create_password_retype": "users.serializers.UserCreateSerializer"
     },
     'TOKEN_MODEL': None,
-    "USERNAME_RESET_CONFIRM_URL": "auth/username-reset/{uid}/{token}"
+    "USERNAME_RESET_CONFIRM_URL": "auth/username-reset/{uid}/{token}",
+    "PASSWORD_RESET_CONFIRM_URL": "auth/password-reset/{uid}/{token}",
 }
