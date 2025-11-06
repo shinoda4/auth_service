@@ -15,9 +15,9 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.contrib import admin
-from django.urls import path, include, re_path
+from django.urls import path, include
 from rest_framework.routers import DefaultRouter
-from rest_framework_simplejwt.views import TokenRefreshView, TokenVerifyView, TokenBlacklistView
+from rest_framework_simplejwt.views import TokenBlacklistView
 
 from users.views import UserViewSet, RoleViewSet, PermissionViewSet, check_permission
 
@@ -28,8 +28,6 @@ router.register(r'permissions', PermissionViewSet)
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('api/', include(router.urls)),
-    # path('api/auth/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
-    # path('api/auth/token/verify/', TokenVerifyView.as_view(), name='token_verify'),
     path('api/auth/token/blacklist/', TokenBlacklistView.as_view(), name='token_blacklist'),
     path('api/auth/', include('djoser.urls')),
     path('api/auth/', include('djoser.urls.jwt')),
