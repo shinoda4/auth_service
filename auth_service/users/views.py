@@ -22,12 +22,18 @@ class RoleViewSet(viewsets.ModelViewSet):
     queryset = Role.objects.all()
     serializer_class = RoleSerializer
     permission_classes = [permissions.IsAuthenticated, ]
+    filterset_fields = ['role_name']
+    search_fields = ['role_name']  # 模糊搜索
+    ordering_fields = ['role_name']  # 排序
 
 
 class PermissionViewSet(viewsets.ModelViewSet):
     queryset = Permission.objects.all()
     serializer_class = PermissionSerializer
     permission_classes = [permissions.IsAuthenticated, ]
+    filterset_fields = ['permission_code', 'permission_name']
+    search_fields = ['permission_code', 'permission_name']  # 模糊搜索
+    ordering_fields = ['permission_code', 'permission_name']  # 排序
 
 
 @api_view(["POST"])
