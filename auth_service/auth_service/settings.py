@@ -171,7 +171,7 @@ SIMPLE_JWT = {
 
 DJOSER = {
     'USER_CREATE_PASSWORD_RETYPE': True,
-    "ACTIVATION_URL": "auth/activate/{uid}/{token}",
+    "ACTIVATION_URL": "activate/{uid}/{token}",
     "SEND_ACTIVATION_EMAIL": True,
     "SERIALIZERS": {
         "user_create_password_retype": "users.serializers.UserCreateSerializer"
@@ -179,4 +179,6 @@ DJOSER = {
     'TOKEN_MODEL': None,
     "USERNAME_RESET_CONFIRM_URL": "auth/username-reset/{uid}/{token}",
     "PASSWORD_RESET_CONFIRM_URL": "auth/password-reset/{uid}/{token}",
+    'EMAIL_FRONTEND_PROTOCOL': "http",
+    'EMAIL_FRONTEND_DOMAIN': "localhost:5173"
 }
